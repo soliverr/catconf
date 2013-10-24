@@ -24,7 +24,7 @@ declare
 begin
   -- By default all actions are enabled
   cur$cfg := sqlinstaller_config_type( NULL, NULL,
-                                       rias_sqlinstaller.action_any, rias_sqlinstaller.enabled );
+                                       sqlinstaller.action_any, sqlinstaller.enabled );
 
   dbms_output.put_line( CHR(10) || '-- START ACTION --' );
   dbms_output.put_line( 'set verify off' );
