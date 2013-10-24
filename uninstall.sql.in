@@ -1,0 +1,47 @@
+--
+-- Deinstallation procedure
+--
+
+prompt
+prompt I: Start deinstallation
+prompt
+
+--
+-- Load ORADBA schema variables
+@@confdir@/schema-define
+--
+-- Load package variables
+@@confdir@/@PACKAGE_NAME@-define
+
+--
+-- Set owner schema
+--
+alter session set current_schema = &&RIAS_SYS_OWNER;
+
+prompt
+prompt I: Deleting tables
+prompt
+@@datarootdir@/@SECTION@/sqlinstaller/drop_table MONITORING_CONFIG
+
+prompt
+prompt I: Deleting types
+prompt
+@@datarootdir@/@SECTION@/sqlinstaller/drop_synonym MONITORING_CONFIG_TYPE PUBLIC
+@@datarootdir@/@SECTION@/sqlinstaller/drop_type MONITORING_CONFIG_TYPE
+@@datarootdir@/@SECTION@/sqlinstaller/drop_type MONITORING_INTERVAL
+
+prompt
+prompt I: Deleting sequences
+prompt
+@@datarootdir@/@SECTION@/sqlinstaller/drop_sequence MONITORING_CONFIG_ID
+
+if sqlinstaller.chk_synonym( 'public.monitoring_config_type' ) = true then
+    execute immediate 'drop public synonym  monitoring_config_type';
+    dbms_output.put_line( 'I: Public synonym MONITORING_CONFIG_TYPE droped' );
+end if;
+
+alter session set current_schema = &&l_cur_schema;
+
+prompt
+prompt "I: Finish deinstallation"
+prompt
